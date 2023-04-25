@@ -12,8 +12,8 @@ module "db" {
   allocated_storage     = 20
   max_allocated_storage = 100
 
-  db_name  = "replicaPostgresql"
-  username = "replica_postgresql"
+  db_name  = var.db_name
+  username = var.db_username
   port     = var.db_port
 
   db_subnet_group_name   = aws_db_subnet_group.db_subnet_group.name

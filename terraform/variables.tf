@@ -43,3 +43,11 @@ variable "availability_zones" {
 variable "db_port" {
   description = "Port for the PostgresDB"
 }
+
+variable "db_name" {
+  description = "Port for the PostgresDB"
+}
+
+variable "db_username" {
+  description = "Port for the PostgresDB"
+}
