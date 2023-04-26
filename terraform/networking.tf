@@ -76,16 +76,20 @@ resource "aws_db_subnet_group" "db_subnet_group" {
 
 resource "aws_eip" "CustomEIP" {
   vpc      = true
+
   tags = {
-    "Name" = "CustomEIP"
+    Name        = "${var.app_name}-eip"
+    Environment = var.app_environment
   }
 }
 
 resource "aws_nat_gateway" "CustomNAT" {
   allocation_id = aws_eip.CustomEIP.id
   subnet_id     = aws_subnet.public[0].id
+
   tags = {
-    Name = "CustomNAT"
+    Name        = "${var.app_name}-nat-gateway"
+    Environment = var.app_environment
   }
 }
 
@@ -98,7 +102,8 @@ resource "aws_route_table" "PrivateRouteTable" {
   }
 
   tags = {
-    Name = "PrivateRouteTable"
+    Name        = "${var.app_name}-routing-table-private"
+    Environment = var.app_environment
   }
 }
 

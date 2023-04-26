@@ -1,0 +1,43 @@
+name: Build, push and deploy
+
+on:
+  merge:
+    branches: [ "main" ]
+
+jobs:
+  ci_cd:
+    runs-on: ubuntu-latest
+    name: A job to build, push and deploy the new image
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Login to ECR
+        id: ecr
+        uses: elgohr/ecr-login-action@v3
+        with:
+          access_key: ${{ secrets.AWS_ACCESS_KEY }}
+          secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          region: ${{ secrets.AWS_REGION }}
+
+      - name: Build image + Publish to Registry
+        uses: elgohr/Publish-Docker-Github-Action@v5
+        with:
+          name: ops-demo-app-dev-ecr
+          username: ${{ steps.ecr.outputs.username }}
+          password: ${{ steps.ecr.outputs.password }}
+          registry: ${{ steps.ecr.outputs.registry }}
+          dockerfile: Dockerfile
+          tags: "latest"
+
+      - name: Download task definition
+        run: |
+          aws ecs describe-task-definition --task-definition my-task-definition-family --query taskDefinition > task-definition.json
+
+      - name: Deploy to Amazon ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: task-definition.json
+          service: ops-demo-app-dev-ecs-service
+          cluster: ops-demo-app-dev-cluster
+          wait-for-service-stability: true
