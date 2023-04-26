@@ -20,7 +20,7 @@ resource "aws_subnet" "db" {
 }
 
 resource "aws_subnet" "private" {
-  vpc_id            = aws_vpc.aws-vpc.id
+  vpc_id            = aws_vpc.aws-vpc.id 
   count             = length(var.private_subnets)
   cidr_block        = element(var.private_subnets, count.index)
   availability_zone = element(var.availability_zones, count.index)
