@@ -73,3 +73,37 @@ resource "aws_db_subnet_group" "db_subnet_group" {
     Environment = var.app_environment
   }
 }
+
+resource "aws_eip" "CustomEIP" {
+  vpc      = true
+  tags = {
+    "Name" = "CustomEIP"
+  }
+}
+
+resource "aws_nat_gateway" "CustomNAT" {
+  allocation_id = aws_eip.CustomEIP.id
+  subnet_id     = aws_subnet.public[0].id
+  tags = {
+    Name = "CustomNAT"
+  }
+}
+
+resource "aws_route_table" "PrivateRouteTable" {
+  vpc_id = aws_vpc.aws-vpc.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.CustomNAT.id
+  }
+
+  tags = {
+    Name = "PrivateRouteTable"
+  }
+}
+
+resource "aws_route_table_association" "PrivateSubnetRouteTableAssociation" {
+  subnet_id      = aws_subnet.private[0].id
+  route_table_id = aws_route_table.PrivateRouteTable.id
+}
+
