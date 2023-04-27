@@ -20,14 +20,22 @@ There's also other resources to ensure the connectivity between all the differen
 
 ## Inicialization
 
-To start building all the solution, you have to execute the classical terraform commands (terraform init, terraform plan, etc), parametrized with the "dev.tfvars" as a variables file.
+To start building all the solution, you have to execute the classical terraform commands (terraform init, terraform plan, etc), parametrized with the "dev.tfvars" as a variables file:
+
+```
+terraform init
+terraform plan -var-file=dev.tfvars
+terraform apply -var-file=dev.tfvars
+```
 
 Once Terraform has finished with his job, all the infrastructure will be created. The only thing that you have to do (or the CI/CD) is building the image and pushing it to the ECR. With that, the ECS will automatically pick the image and create a new container.
 
 
 ## Scaling the service
 
-As already metioned there's an autoscaler in the ECS cluster to increase the amount of pods, with that you can face higher demands on the application. If that's not enough, you can increase the limits of the autoscaler. Another situation is that you already know that you're going to have a larger audience, in that case you can increase  the number of the desired tasks in the ECS cluster, it will create new containers to distribute the load among them. No additional action is needed, the Application load balancer will distribute the load among all of them.
+As already metioned there's an autoscaler in the ECS cluster to increase the amount of pods, with that you can face higher demands on the application. If that's not enough, you can increase the limits of the autoscaler. 
+
+Another situation is that you already know that you're going to have a larger audience, in that case you can increase  the number of the desired tasks in the ECS cluster, it will create new containers to distribute the load among them. No additional action is needed, the Application load balancer will distribute the load among all of them.
 
 
 ## CI/CD
