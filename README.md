@@ -10,7 +10,7 @@ In addition, there's a CI/CD solution implemented with GitHub actions (.github/w
 
 This diagram, it's a high level view of all the different components involved in the solution:
 
-![AWS-diagram](AWS-diagram.jpeg)
+![AWS-diagram](https://user-images.githubusercontent.com/80314345/234810523-f60088df-facc-432f-8162-b947b4e9e071.jpg)
 
 The solution is based in containers, so there's a Dockerfile in the repo to build the image. I'm using an ECR to store the application images, and an ECS cluster to run it. There's also an RDS (PostgreSQL) for the application to perform the ping. I also added to the solution an Application Load Balancer to distribute the different requests between all the containers in the cluster.
 
