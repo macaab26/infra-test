@@ -1,6 +1,6 @@
 # infra-test
 
-This repo contains the code needed in terraform to create the infrastructure to run a web application (Go) on AWS.
+This repo contains the terraform code needed to create the infrastructure to run a web application (Go) on AWS.
 
 The web application is located in the test-app/ directory. Its only requirements are to be able to connect to a PostgreSQL database and perform PING requests.
 
@@ -20,7 +20,7 @@ There's also other resources to ensure the connectivity between all the differen
 
 ## Inicialization
 
-To start building all the solution, you have to execute the classical terraform commands (terraform init, terraform plan, etc), parametrized with the "dev.tfvars" as a variables file:
+To start building all the solution, you have to execute the classical terraform commands, parametrized with the "dev.tfvars" as a variables file:
 
 ```
 terraform init
@@ -35,9 +35,12 @@ Once Terraform has finished with his job, all the infrastructure will be created
 
 As already metioned there's an autoscaler in the ECS cluster to increase the amount of pods, with that you can face higher demands on the application. If that's not enough, you can increase the limits of the autoscaler. 
 
-Another situation is that you already know that you're going to have a larger audience, in that case you can increase  the number of the desired tasks in the ECS cluster, it will create new containers to distribute the load among them. No additional action is needed, the Application load balancer will distribute the load among all of them.
+Another situation is that you already know that you're going to have a larger audience, in that case you can increase the number of the desired tasks in the ECS cluster, it will create new containers to distribute the load among them. No additional action is needed, the Application load balancer will distribute the load among all of them.
 
 
 ## CI/CD
 
 I have created a CI/CD solution based on GitHub actions to deploy the application when you merge a brach into the main one with 0 downtime. The solution builds the new image with the Dockerfile, and after that the image is pushed to the ECR repo. The next step is to download the current task definition from the ECS cluster. It changes the tag with the new build number, and push the new definition to the cluster. The ECS will do a green/blue deployment for the task with 0 downtime.   
+
+
+Hope you like it :)
