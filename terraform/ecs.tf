@@ -15,11 +15,6 @@ resource "aws_cloudwatch_log_group" "log-group" {
   }
 }
 
-# data "template_file" "env_vars" {
-#   template = file("env_vars.json")
-# }
-#       "environment": ${data.template_file.env_vars.rendered},
-
 resource "aws_ecs_task_definition" "aws-ecs-task" {
   family = "${var.app_name}-task"
 
