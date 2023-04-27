@@ -40,4 +40,4 @@ Another situation is that you already know that you're going to have a larger au
 
 ## CI/CD
 
-I have created a CI/CD solution based on GitHub actions to deploy the application when it has some changes with 0 downtime. The solution builds the new image with the Dockerfile, and after that the image is pushed to the ECR repo. The next step is to download the current task definition from the ECS cluster. It changes the tag with the new build number, and push the new definition to the cluster. The ECS will do a green/blue deployment for the task with 0 downtime.   
+I have created a CI/CD solution based on GitHub actions to deploy the application when you merge a brach into the main one with 0 downtime. The solution builds the new image with the Dockerfile, and after that the image is pushed to the ECR repo. The next step is to download the current task definition from the ECS cluster. It changes the tag with the new build number, and push the new definition to the cluster. The ECS will do a green/blue deployment for the task with 0 downtime.   
