@@ -12,6 +12,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Get Current Time
+        uses: josStorer/get-current-time@v2.1.1
+        id: current-time
+
       - name: Login to ECR
         id: ecr
         uses: elgohr/ecr-login-action@v3
@@ -22,17 +26,26 @@ jobs:
 
       - name: Build image + Publish to Registry
         uses: elgohr/Publish-Docker-Github-Action@v5
+        id: build-push-image
         with:
           name: ops-demo-app-dev-ecr
           username: ${{ steps.ecr.outputs.username }}
           password: ${{ steps.ecr.outputs.password }}
           registry: ${{ steps.ecr.outputs.registry }}
           dockerfile: Dockerfile
-          tags: "latest"
+          tags: "${{ steps.current-time.outputs.time }}"
 
       - name: Download task definition
         run: |
           aws ecs describe-task-definition --task-definition my-task-definition-family --query taskDefinition > task-definition.json
+
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@c804dfbdd57f713b6c079302a4c01db7017a36fc
+        with:
+          task-definition: task-definition.json
+          container-name: ops-demo-app-dev-container
+          image: ${{ steps.build-push-image.outputs.tag }}
 
       - name: Deploy to Amazon ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
